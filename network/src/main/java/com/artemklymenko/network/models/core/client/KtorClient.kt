@@ -5,8 +5,11 @@ import com.artemklymenko.network.models.data.mappers.toDomainCharacter
 import com.artemklymenko.network.models.domain.DomainCharacter
 import com.artemklymenko.network.models.remote.RemoteCharacter
 import com.artemklymenko.network.models.core.utils.Constants.BASE_URL
+import com.artemklymenko.network.models.data.mappers.toDomainCharacterPage
 import com.artemklymenko.network.models.data.mappers.toDomainEpisode
+import com.artemklymenko.network.models.domain.DomainCharacterPage
 import com.artemklymenko.network.models.domain.DomainEpisode
+import com.artemklymenko.network.models.remote.RemoteCharacterPage
 import com.artemklymenko.network.models.remote.RemoteEpisode
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -78,6 +81,15 @@ class KtorClient {
             }
         }
     }
+
+    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<DomainCharacterPage> {
+        return safeApiCall {
+            client.get("character/?page=$pageNumber")
+                .body<RemoteCharacterPage>()
+                .toDomainCharacterPage()
+        }
+    }
+
 
     private inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
         return try {
