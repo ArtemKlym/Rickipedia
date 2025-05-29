@@ -1,6 +1,5 @@
-package com.artemklymenko.rickipedia.ui.theme
+package com.artemklymenko.rickipedia.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
