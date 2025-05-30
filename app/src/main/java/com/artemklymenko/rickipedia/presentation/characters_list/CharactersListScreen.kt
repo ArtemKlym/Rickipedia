@@ -1,26 +1,23 @@
 package com.artemklymenko.rickipedia.presentation.characters_list
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.artemklymenko.rickipedia.core.components.ErrorMessageComponent
 import com.artemklymenko.rickipedia.core.components.LoadingState
 import com.artemklymenko.rickipedia.core.components.SimpleToolbar
 import com.artemklymenko.rickipedia.presentation.characters_list.components.CharacterGridItem
@@ -56,44 +53,47 @@ fun CharactersListScreen(
 
     state.value.let { stateValue ->
         if (stateValue.isLoading) {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                LoadingState()
-            }
+            LoadingState()
         } else if (stateValue.errorMessage != null) {
-            Box(
+            ErrorMessageComponent(
+                message = stateValue.errorMessage,
                 modifier = modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stateValue.errorMessage,
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+            )
         } else {
-            Column(
-                modifier = modifier.fillMaxSize()
-            ) {
-                SimpleToolbar("All characters")
-                LazyVerticalGrid(
-                    state = scrollState,
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        items = stateValue.characters,
-                        key = { it.id }
-                    ) { character ->
-                        CharacterGridItem(modifier = Modifier, character = character) {
-                            onCharacterClick(character.id)
-                        }
-                    }
+            CharactersListContent(
+                modifier = modifier,
+                scrollState = scrollState,
+                stateValue = stateValue,
+                onCharacterClick = onCharacterClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun CharactersListContent(
+    modifier: Modifier,
+    scrollState: LazyGridState,
+    stateValue: CharactersListState,
+    onCharacterClick: (Int) -> Unit
+) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        SimpleToolbar("All characters")
+        LazyVerticalGrid(
+            state = scrollState,
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(
+                items = stateValue.characters,
+                key = { it.id }
+            ) { character ->
+                CharacterGridItem(modifier = Modifier, character = character) {
+                    onCharacterClick(character.id)
                 }
             }
         }
