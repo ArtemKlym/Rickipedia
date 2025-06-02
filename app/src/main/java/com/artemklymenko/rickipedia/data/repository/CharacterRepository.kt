@@ -4,6 +4,7 @@ import com.artemklymenko.network.models.core.client.KtorClient
 import com.artemklymenko.network.models.core.utils.ApiOperation
 import com.artemklymenko.network.models.domain.DomainCharacter
 import com.artemklymenko.network.models.domain.DomainCharacterPage
+import com.artemklymenko.network.models.domain.DomainEpisode
 import javax.inject.Inject
 
 class CharacterRepository @Inject constructor(
@@ -15,5 +16,9 @@ class CharacterRepository @Inject constructor(
 
     suspend fun fetchCharacter(characterId: Int): ApiOperation<DomainCharacter> {
         return ktorClient.getCharacter(characterId)
+    }
+
+    suspend fun fetchCharacterEpisodes(episodeIds: List<Int>): ApiOperation<List<DomainEpisode>> {
+        return ktorClient.getEpisodes(episodeIds)
     }
 }
