@@ -1,7 +1,6 @@
 package com.artemklymenko.network.models.core.utils
 
 import com.artemklymenko.network.R
-import java.lang.Exception
 
 sealed interface ApiOperation<T>{
     data class Success<T>(val data: T): ApiOperation<T>
