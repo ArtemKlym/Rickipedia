@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.character_details
+package com.artemklymenko.rickipedia.presentation.home.character_details
 
 import com.artemklymenko.network.models.domain.DomainCharacter
 import com.artemklymenko.rickipedia.core.domain.DataPoint

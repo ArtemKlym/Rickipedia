@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.character_episodes
+package com.artemklymenko.rickipedia.presentation.home.character_episodes
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -26,8 +26,8 @@ import com.artemklymenko.rickipedia.core.components.CharacterNameComponent
 import com.artemklymenko.rickipedia.core.components.ErrorMessageComponent
 import com.artemklymenko.rickipedia.core.components.LoadingState
 import com.artemklymenko.rickipedia.core.components.SimpleToolbar
-import com.artemklymenko.rickipedia.presentation.character_details.components.SeasonHeader
-import com.artemklymenko.rickipedia.presentation.character_episodes.components.EpisodeRowComponent
+import com.artemklymenko.rickipedia.presentation.home.character_details.components.SeasonHeader
+import com.artemklymenko.rickipedia.presentation.home.character_episodes.components.EpisodeRowComponent
 import com.artemklymenko.rickipedia.presentation.ui.theme.RickAction
 
 @Composable

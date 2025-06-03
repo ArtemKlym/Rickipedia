@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.characters_list
+package com.artemklymenko.rickipedia.presentation.home.characters_list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.artemklymenko.rickipedia.core.components.ErrorMessageComponent
 import com.artemklymenko.rickipedia.core.components.LoadingState
 import com.artemklymenko.rickipedia.core.components.SimpleToolbar
-import com.artemklymenko.rickipedia.presentation.characters_list.components.CharacterGridItem
+import com.artemklymenko.rickipedia.presentation.home.characters_list.components.CharacterGridItem
 
 @Composable
 fun CharactersListScreen(

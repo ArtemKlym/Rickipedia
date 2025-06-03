@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.character_episodes.components
+package com.artemklymenko.rickipedia.presentation.home.character_episodes.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
