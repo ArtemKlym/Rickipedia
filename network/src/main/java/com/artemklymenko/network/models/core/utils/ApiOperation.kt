@@ -1,7 +1,6 @@
 package com.artemklymenko.network.models.core.utils
 
 import com.artemklymenko.network.R
-import java.lang.Exception
 
 sealed interface ApiOperation<T>{
     data class Success<T>(val data: T): ApiOperation<T>
@@ -14,7 +13,7 @@ sealed interface ApiOperation<T>{
         }
     }
 
-    fun onSuccess(block: (T) -> Unit): ApiOperation<T> {
+    suspend fun onSuccess(block: suspend (T) -> Unit): ApiOperation<T> {
         if(this is Success) {
             block(data)
         }
