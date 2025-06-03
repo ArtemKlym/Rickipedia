@@ -14,7 +14,7 @@ sealed interface ApiOperation<T>{
         }
     }
 
-    fun onSuccess(block: (T) -> Unit): ApiOperation<T> {
+    suspend fun onSuccess(block: suspend (T) -> Unit): ApiOperation<T> {
         if(this is Success) {
             block(data)
         }

@@ -7,10 +7,13 @@ import com.artemklymenko.network.models.remote.RemoteCharacter
 import com.artemklymenko.network.models.core.utils.Constants.BASE_URL
 import com.artemklymenko.network.models.data.mappers.toDomainCharacterPage
 import com.artemklymenko.network.models.data.mappers.toDomainEpisode
+import com.artemklymenko.network.models.data.mappers.toDomainEpisodePage
 import com.artemklymenko.network.models.domain.DomainCharacterPage
 import com.artemklymenko.network.models.domain.DomainEpisode
+import com.artemklymenko.network.models.domain.DomainEpisodePage
 import com.artemklymenko.network.models.remote.RemoteCharacterPage
 import com.artemklymenko.network.models.remote.RemoteEpisode
+import com.artemklymenko.network.models.remote.RemoteEpisodePage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -80,6 +83,41 @@ class KtorClient {
                     .also { episodesCache[episodesIds] = it }
             }
         }
+    }
+
+    suspend fun getEpisodesByPage(pageIndex: Int): ApiOperation<DomainEpisodePage> {
+        return safeApiCall {
+            client.get("episode") {
+                url {
+                    parameters.append("page", pageIndex.toString())
+                }
+            }
+                .body<RemoteEpisodePage>()
+                .toDomainEpisodePage()
+        }
+    }
+
+    suspend fun getAllEpisodes(): ApiOperation<List<DomainEpisode>> {
+        val data = mutableListOf<DomainEpisode>()
+        var exception: Exception? = null
+
+        getEpisodesByPage(pageIndex = 1).onSuccess { firstPage ->
+            val totalPageCount = firstPage.info.pages
+            data.addAll(firstPage.episodes)
+
+            repeat(totalPageCount - 1) { index ->
+                getEpisodesByPage(pageIndex = index + 2).onSuccess { nextPage ->
+                    data.addAll(nextPage.episodes)
+                }.onFailure { error ->
+                    exception = error
+                }
+
+                if(exception == null) { return@onSuccess }
+            }
+        }.onFailure {
+            exception = it
+        }
+        return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
     }
 
     suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<DomainCharacterPage> {
