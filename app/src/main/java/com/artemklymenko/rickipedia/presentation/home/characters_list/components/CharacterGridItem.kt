@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.characters_list.components
+package com.artemklymenko.rickipedia.presentation.home.characters_list.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

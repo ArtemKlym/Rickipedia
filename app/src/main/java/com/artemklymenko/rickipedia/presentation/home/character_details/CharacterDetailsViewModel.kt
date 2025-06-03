@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.character_details
+package com.artemklymenko.rickipedia.presentation.home.character_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

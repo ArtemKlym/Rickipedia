@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.character_details
+package com.artemklymenko.rickipedia.presentation.home.character_details
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,7 +28,7 @@ import com.artemklymenko.rickipedia.core.components.DataPointComponent
 import com.artemklymenko.rickipedia.core.components.ErrorMessageComponent
 import com.artemklymenko.rickipedia.core.components.LoadingState
 import com.artemklymenko.rickipedia.core.components.SimpleToolbar
-import com.artemklymenko.rickipedia.presentation.character_details.components.CharacterDetailsNamePlateComponent
+import com.artemklymenko.rickipedia.presentation.home.character_details.components.CharacterDetailsNamePlateComponent
 import com.artemklymenko.rickipedia.presentation.ui.theme.RickAction
 import kotlinx.coroutines.flow.StateFlow
 

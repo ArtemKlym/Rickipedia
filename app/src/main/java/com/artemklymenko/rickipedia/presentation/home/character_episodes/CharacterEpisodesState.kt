@@ -1,4 +1,4 @@
-package com.artemklymenko.rickipedia.presentation.character_episodes
+package com.artemklymenko.rickipedia.presentation.home.character_episodes
 
 import com.artemklymenko.network.models.domain.DomainEpisode
 
