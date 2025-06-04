@@ -10,8 +10,11 @@ import javax.inject.Inject
 class CharacterRepository @Inject constructor(
     private val ktorClient: KtorClient
 ) {
-    suspend fun fetchCharactersPage(page: Int): ApiOperation<DomainCharacterPage> {
-        return ktorClient.getCharacterByPage(page)
+    suspend fun fetchCharactersPage(
+        page: Int,
+        params: Map<String, String> = emptyMap()
+    ): ApiOperation<DomainCharacterPage> {
+        return ktorClient.getCharacterByPage(pageNumber = page, queryParams = params)
     }
 
     suspend fun fetchCharacter(characterId: Int): ApiOperation<DomainCharacter> {
@@ -20,5 +23,9 @@ class CharacterRepository @Inject constructor(
 
     suspend fun fetchCharacterEpisodes(episodeIds: List<Int>): ApiOperation<List<DomainEpisode>> {
         return ktorClient.getEpisodes(episodeIds)
+    }
+
+    suspend fun fetchAllCharactersByName(searchQuery: String): ApiOperation<List<DomainCharacter>> {
+        return ktorClient.searchAllCharactersByName(searchQuery)
     }
 }
