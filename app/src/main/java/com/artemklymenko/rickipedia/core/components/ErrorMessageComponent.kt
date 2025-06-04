@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.artemklymenko.rickipedia.presentation.ui.theme.RickTextSecondary
 
 @Composable
 fun ErrorMessageComponent(
@@ -22,7 +23,8 @@ fun ErrorMessageComponent(
         Text(
             text = message ?: "Unknown exception occurred",
             fontSize = 24.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = RickTextSecondary
         )
     }
 }
