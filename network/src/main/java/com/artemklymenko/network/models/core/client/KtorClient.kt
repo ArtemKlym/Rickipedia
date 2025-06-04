@@ -1,16 +1,16 @@
 package com.artemklymenko.network.models.core.client
 
 import com.artemklymenko.network.models.core.utils.ApiOperation
-import com.artemklymenko.network.models.data.mappers.toDomainCharacter
-import com.artemklymenko.network.models.domain.DomainCharacter
-import com.artemklymenko.network.models.remote.RemoteCharacter
 import com.artemklymenko.network.models.core.utils.Constants.BASE_URL
+import com.artemklymenko.network.models.data.mappers.toDomainCharacter
 import com.artemklymenko.network.models.data.mappers.toDomainCharacterPage
 import com.artemklymenko.network.models.data.mappers.toDomainEpisode
 import com.artemklymenko.network.models.data.mappers.toDomainEpisodePage
+import com.artemklymenko.network.models.domain.DomainCharacter
 import com.artemklymenko.network.models.domain.DomainCharacterPage
 import com.artemklymenko.network.models.domain.DomainEpisode
 import com.artemklymenko.network.models.domain.DomainEpisodePage
+import com.artemklymenko.network.models.remote.RemoteCharacter
 import com.artemklymenko.network.models.remote.RemoteCharacterPage
 import com.artemklymenko.network.models.remote.RemoteEpisode
 import com.artemklymenko.network.models.remote.RemoteEpisodePage
@@ -25,7 +25,6 @@ import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import java.lang.Exception
 
 class KtorClient {
     private val client = HttpClient(OkHttp) {
@@ -85,7 +84,7 @@ class KtorClient {
         }
     }
 
-    suspend fun getEpisodesByPage(pageIndex: Int): ApiOperation<DomainEpisodePage> {
+    private suspend fun getEpisodesByPage(pageIndex: Int): ApiOperation<DomainEpisodePage> {
         return safeApiCall {
             client.get("episode") {
                 url {
@@ -120,12 +119,51 @@ class KtorClient {
         return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
     }
 
-    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<DomainCharacterPage> {
+    suspend fun getCharacterByPage(
+        pageNumber: Int,
+        queryParams: Map<String, String>
+    ): ApiOperation<DomainCharacterPage> {
         return safeApiCall {
-            client.get("character/?page=$pageNumber")
+            client.get("character") {
+                url {
+                    parameters.append("page", pageNumber.toString())
+                    queryParams.forEach { parameters.append(it.key, it.value) }
+                }
+            }
                 .body<RemoteCharacterPage>()
                 .toDomainCharacterPage()
         }
+    }
+
+    suspend fun searchAllCharactersByName(
+        searchQuery: String
+    ): ApiOperation<List<DomainCharacter>> {
+        val data = mutableListOf<DomainCharacter>()
+        var exception: Exception? = null
+
+        getCharacterByPage(
+            pageNumber = 1,
+            queryParams = mapOf("name" to searchQuery)
+        ).onSuccess { firstPage ->
+            val totalPageCount = firstPage.info.pages
+            data.addAll(firstPage.characters)
+
+            repeat(totalPageCount - 1) { index ->
+                getCharacterByPage(
+                    pageNumber = index + 2,
+                    queryParams = mapOf("name" to searchQuery)
+                ).onSuccess { nextPage ->
+                    data.addAll(nextPage.characters)
+                }.onFailure { error ->
+                    exception = error
+                }
+
+                if(exception == null) { return@onSuccess }
+            }
+        }.onFailure {
+            exception = it
+        }
+        return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
     }
 
 
