@@ -14,12 +14,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.artemklymenko.rickipedia.presentation.navigation.MainNavigation
 import com.artemklymenko.rickipedia.presentation.navigation.NavDestination
@@ -37,13 +36,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val items = listOf(NavDestination.Home, NavDestination.Episodes, NavDestination.Search)
-            val selectedIndex by remember { mutableIntStateOf(0) }
             RickipediaTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     containerColor = RickPrimary,
                     bottomBar = {
-                        MainNavigationBar(items, selectedIndex, navController)
+                        MainNavigationBar(items, navController)
                     }
                 ) { innerPadding ->
                     MainNavigation(
@@ -58,12 +56,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainNavigationBar(
         items: List<NavDestination>,
-        selectedIndex: Int,
         navController: NavHostController
     ) {
-        var selectedIndex1 = selectedIndex
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
         NavigationBar(containerColor = RickPrimary) {
-            items.forEachIndexed { index, navDestination ->
+            items.forEach { navDestination ->
+                val selected = navDestination.route == currentRoute
                 NavigationBarItem(
                     icon = {
                         Icon(
@@ -74,9 +74,8 @@ class MainActivity : ComponentActivity() {
                     label = {
                         Text(text = navDestination.title)
                     },
-                    selected = index == selectedIndex1,
+                    selected = selected,
                     onClick = {
-                        selectedIndex1 = index
                         navController.navigate(navDestination.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
