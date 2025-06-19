@@ -47,6 +47,7 @@ import com.artemklymenko.rickipedia.presentation.ui.theme.RickTextSecondary
 fun SearchScreen(
     uiState: SearchUiState,
     onEvent: (SearchUiEvent) -> Unit,
+    onCharacterClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -116,7 +117,7 @@ fun SearchScreen(
                     filterState = uiState.filterState,
                     allCharacters = uiState.allResults,
                     onEvent = onEvent,
-                    onCharacterClick = {}
+                    onCharacterClick = onCharacterClick
                 )
             }
         }
@@ -129,7 +130,7 @@ fun SearchScreenContent(
     characters: List<DomainCharacter>,
     filterState: SearchUiState.FilterState,
     allCharacters: List<DomainCharacter>,
-    onCharacterClick: () -> Unit,
+    onCharacterClick: (Int) -> Unit,
     onEvent: (SearchUiEvent) -> Unit
 ) {
     Row(
@@ -192,7 +193,7 @@ fun SearchScreenContent(
                 character = character,
                 characterDataPoints = dataPoints,
                 onClick = {
-                    onCharacterClick.invoke()
+                    onCharacterClick.invoke(character.id)
                 }
             )
         }
